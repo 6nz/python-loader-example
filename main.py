@@ -47,8 +47,8 @@ os.system("cls")
 ###############################################SETTINGS###############################################
 vmcheck_switch = True
 vtdetect_switch = True
-listcheck_switch = False
-anti_debug_switch = False
+listcheck_switch = True
+anti_debug_switch = True
 #If everything is on the program will be fully protected!
 ###############################################SETTINGS###############################################
 
