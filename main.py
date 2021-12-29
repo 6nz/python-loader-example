@@ -7,6 +7,9 @@
 # WARNING! All changes made in this file will be lost!
 
 
+#Updates: Fixed auto login and auth file check.
+
+
 ###############################################MODULES###############################################
 import json as jsond  # json
 import time  # sleep before exit
@@ -47,8 +50,8 @@ os.system("cls")
 ###############################################SETTINGS###############################################
 vmcheck_switch = True
 vtdetect_switch = True
-listcheck_switch = True
-anti_debug_switch = True
+listcheck_switch = False
+anti_debug_switch = False
 #If everything is on the program will be fully protected!
 ###############################################SETTINGS###############################################
 
@@ -738,15 +741,16 @@ colorama.init()
 time.sleep(1)
 try:
     if os.path.isfile('Files/auth.json'):
-        with open('Files/auth.json', 'r') as f:
-            authfile = jsond.load(f)
-            authuser = authfile.get('authusername')
-            authpass = authfile.get('authpassword')
-            keyauthapp.login(authuser,authpass)
-    else:
-        pass
+        if jsond.load(open("Files/auth.json"))["authusername"] == "":
+            pass
+        else:
+            with open('Files/auth.json', 'r') as f:
+                authfile = jsond.load(f)
+                authuser = authfile.get('authusername')
+                authpass = authfile.get('authpassword')
+                keyauthapp.login(authuser,authpass)
 except:
-    print("Error while loading auth file... check if the auth file is missing or not")
+    print("Error while loading auth file... check if the auth file is missing/empty or not")
     time.sleep(3)
     os._exit(1)
 
