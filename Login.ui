@@ -26,7 +26,7 @@
    <string>Login</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="file_rc.qrc">
+   <iconset resource="files_rc.qrc">
     <normaloff>:/Icon/Images/Icon.ico</normaloff>:/Icon/Images/Icon.ico</iconset>
   </property>
   <property name="styleSheet">
@@ -410,7 +410,7 @@ QPushButton:pressed {
   </widget>
  </widget>
  <resources>
-  <include location="file_rc.qrc"/>
+  <include location="files_rc.qrc"/>
  </resources>
  <connections/>
 </ui>
