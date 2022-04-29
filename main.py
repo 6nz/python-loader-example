@@ -6,6 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 # UPDATES: fixed some bugs, added auth file exist or not check system, added register option, added tooltips
+#MADE BY MARCI
 
 ###############################################MODULES###############################################
 import json as jsond  # json
