@@ -5,8 +5,7 @@
 # Created by: Marci and PyQt5 UI code generator 5.15.4
 #
 # WARNING! All changes made in this file will be lost!
-# UPDATES: fixed some bugs, added auth file exist or not check system, added register option, added tooltips
-#MADE BY MARCI
+
 
 ###############################################MODULES###############################################
 import json as jsond  # json
@@ -51,6 +50,8 @@ vtdetect_switch = True
 listcheck_switch = False
 anti_debug_switch = False
 windowname = "SkyNet Loader - Login"
+width = 500
+height = 700
 #If everything is on the program will be fully protected!
 ###############################################SETTINGS###############################################
 
@@ -731,7 +732,7 @@ class encryption:
 
 os.system("cls")
 
-keyauthapp = api("app name", "owner id", "secret","1.0")
+keyauthapp = api("appname", "ownerid", "secret","1.0")
 
 keyauthapp.init()
 
@@ -1120,7 +1121,8 @@ class Ui_MainWindow(object):
         self.menubar.setGeometry(QtCore.QRect(0, 0, 500, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
-
+        # setting  the fixed size of window
+        MainWindow.setFixedSize(width, height)
 
 
         #
