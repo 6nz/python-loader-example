@@ -15,3 +15,5 @@ Install PyQt5 and PyQt5 Designer and edit the .ui file, then convert it to pytho
 
 Preview: ![image](https://user-images.githubusercontent.com/74118308/166079334-d9ffced7-7341-4cac-a88f-d73271510bd4.png)
 
+**UPDATE:**
+added register option, some error/file checks and tooltips + fixed some errors etc
