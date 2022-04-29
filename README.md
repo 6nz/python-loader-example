@@ -3,7 +3,7 @@
 Python loader with basic protections and auth system.
 
 # Features:
-**Auth system, basic protection(vm check, anti-deubgger etc), save user, register and login option
+**Auth system, basic protection(vm check, anti-deubgger etc), save user, register and login option**
 
 # How to use:
 Edit line 155(add a discord webhook) and 735(edit the keyauth api)
