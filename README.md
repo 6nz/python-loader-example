@@ -2,6 +2,9 @@
 **Description:**
 Python [KeyAuth](https://keyauth.win/) loader with basic protections and auth system.
 
+**WEBSITE:**
+https://keyauth.win/
+
 # Features:
 **Anti-VM, pc logging, user info display, register option, save user option, auto login, basic protections (anti debugger, anti sandboxie dll injection), auth file exist check, tooltips, non sizable window, empty field check and auth file check, error display**
 
@@ -17,6 +20,3 @@ Preview: ![image](https://user-images.githubusercontent.com/74118308/166079334-d
 
 **UPDATE:**
 added register option, some error/file checks and tooltips + fixed some errors etc
-
-**WEBSITE:**
-https://keyauth.win/
