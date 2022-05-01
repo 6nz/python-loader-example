@@ -9,7 +9,7 @@ https://keyauth.win/
 **Anti-VM, pc logging, user info display, register option, save user option, auto login, basic protections (anti debugger, anti sandboxie dll injection), auth file exist check, tooltips, non sizable window, empty field check and auth file check, error display**
 
 # How to use:
-Edit line 155(add a discord webhook) and 736(edit the keyauth api)
+Edit line 158(add a discord webhook) and 736(edit the keyauth api)
 
 
 # How to edit and re compile the UI:
