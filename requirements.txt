@@ -1,0 +1,8 @@
+pywin32
+requests
+pycryptodome
+colorama
+PyQt5
+wmi
+psutil
+dhooks
