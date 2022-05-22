@@ -48,7 +48,7 @@ os.system("cls")
 vmcheck_switch = True #Enabled by default / Check if this file is running on a vm
 vtdetect_switch = True #Enabled by default / Info sending through Discord webhook
 listcheck_switch = False #Disabled by default / will block all blacklisted virustotal machines
-anti_debug_switch = True #Disabled by default / block debugger programs
+anti_debug_switch = False #Disabled by default / block debugger programs
 #If everything is on the program will be "fully protected"!
 windowname = "SkyNet Loader - Login"
 api = "discord webhook goes here" #DISCORD WEBHOOK
