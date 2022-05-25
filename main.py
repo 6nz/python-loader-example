@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-#UPDATE: bug fixes, small improvements, faster loading time, faster login/register, hide/unhide console window
+#UPDATE: ban/init checking...
 #New updated soon. (embeds, error logging through discord/more logging options, toggleable auto-login)
 
 ###############################################MODULES###############################################
@@ -51,8 +51,9 @@ listcheck_switch = False #Disabled by default / will block all blacklisted virus
 anti_debug_switch = False #Disabled by default / block debugger programs
 #If everything is on the program will be "fully protected"!
 windowname = "SkyNet Loader - Login"
-api = "discord webhook goes here" #DISCORD WEBHOOK
+api = "" #DISCORD WEBHOOK
 hide_console_switch = False #HIDE CONSOLE SWITCH / Disabled by default, console will auto show after the user logged in(set it to false if u want to see the errors)
+live_ban_checking = False #Disabled by default / checks if the user is banned and auto closes app.
 windowhide = win32gui.GetForegroundWindow()
 width = 500
 height = 700
@@ -320,7 +321,7 @@ def slow_type(text, speed, newLine = True):
 
 def all(): #example console program
     print("Hello, this is my test program!")
-    time.sleep(3)
+    time.sleep(10)
     os._exit(1)
 
 class api:
@@ -336,7 +337,48 @@ class api:
         self.version = version
 
     sessionid = enckey = ""
+    initialized = False
 
+    def checkblacklist(self):
+        self.checkinit()
+        hwid = others.get_hwid()
+        init_iv = SHA256.new(str(uuid4())[:8].encode()).hexdigest()
+        post_data = {
+            "type": binascii.hexlify(("checkblacklist").encode()),
+            "hwid": encryption.encrypt(hwid, self.enckey, init_iv),
+            "sessionid": binascii.hexlify(self.sessionid.encode()),
+            "name": binascii.hexlify(self.name.encode()),
+            "ownerid": binascii.hexlify(self.ownerid.encode()),
+            "init_iv": init_iv
+        }
+        response = self.__do_request(post_data)
+
+        response = encryption.decrypt(response, self.enckey, init_iv)
+        json = jsond.loads(response)
+        if json["success"]:
+            return True
+        else:
+            return False
+    def banchecker(self):
+        while True:
+            try:
+                time.sleep(60)
+                status = api.checkblacklist(self)
+                #print(status)
+                if "True" in str(status):
+                    print("User banned.")
+                    #Do something
+                    os._exit(0)
+                else:
+                    #Do something
+                    pass
+            except Exception as e:
+                print(e)
+                pass
+    def checkinit(self):
+        if not self.initialized:
+            print("Initialize first, in order to use the functions.")
+            sys.exit()
     def init(self):
 
         init_iv = SHA256.new(str(uuid4())[:8].encode()).hexdigest()
@@ -366,6 +408,7 @@ class api:
             sys.exit()
 
         self.sessionid = json["sessionid"]
+        self.initialized = True
 
     def register(self, user, password, license, hwid=None):
         if hwid is None:
@@ -429,6 +472,16 @@ class api:
             win32gui.ShowWindow(hider, win32con.SW_HIDE)
             os.system("cls")
             slow_type(f"{Fore.RED}Successfully logged in! Starting program...{Fore.RESET}", 0.03)
+            if live_ban_checking == True:
+                try:
+                    #print("Starting ban checking system...")
+                    b = threading.Thread(name='Ban Checker', target=api.banchecker, args=(self,))
+                    b.start()
+                    #print("Started.")
+                except:
+                    pass                
+            else:
+                pass
             time.sleep(1)
             os.system("cls")
             n = int(self.user_data.expires)
@@ -576,7 +629,7 @@ class encryption:
 
 os.system("cls")
 
-keyauthapp = api("app name", "owner id", "secret","1.0") #KEYAUTH API
+keyauthapp = api("app name", "ownerid", "secret","1.0") #KEYAUTH API
 
 keyauthapp.init()
 
