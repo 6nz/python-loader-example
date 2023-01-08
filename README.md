@@ -6,7 +6,7 @@ Python [KeyAuth](https://keyauth.win/) loader with basic protections and auth sy
 https://keyauth.win/
 
 # Features:
-**Anti-VM, pc logging, user info display, register option, save user option, auto login, basic protections (anti debugger, anti sandboxie dll injection), auth file exist check, tooltips, non sizable window, empty field check and auth file check, error display, hide/unhide console option, threaded user ban checking every 60 seconds**
+**Anti-VM, pc logging, user info display, register option, save user option, auto login, basic protections (anti debugger, anti sandboxie dll injection), auth file exist check, tooltips, non sizable window, empty field check and auth file check, error display, hide/unhide console option, threaded user ban and session checking every 60 seconds**
 
 # How to use:
 Check everything from line 40 to line 82, add a discord webhook at line 78 and dont forget to set up the keyauth API line 729.
