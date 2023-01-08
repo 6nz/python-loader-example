@@ -7,3 +7,4 @@ wmi
 psutil
 pythonprotector
 pillow
+cryptography
