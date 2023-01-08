@@ -75,7 +75,7 @@ security = PythonProtector(
         "AntiDLL",
         "AntiAnalysis"],
     logs_path=LOGGING_PATH,
-    webhook_url="https://discord.com/api/webhooks/980912883435200512/rEvyts4WGz9E0oEfSvPe3OKNsNkqNYjjeebyMFDB5fdFTJvZ84WGTEmW3qTMHHn1lNzA",
+    webhook_url="webhook here",
     on_detect=[
         "Report",
         "Exit",
