@@ -5,5 +5,5 @@ colorama
 PyQt5
 wmi
 psutil
-pyprotector
+pythonprotector
 pillow
