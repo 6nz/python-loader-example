@@ -1,9 +1,9 @@
 # python-loader-example
 **Description:**
-Python [KeyAuth](https://keyauth.win/) loader with basic protections and auth system.
+Python [KeyAuth](https://keyauth.cc/) loader with basic protections and auth system.
 
 **WEBSITE:**
-https://keyauth.win/
+https://keyauth.cc/
 
 # Features:
 **Anti-VM, pc logging, user info display, register option, save user option, auto login, basic protections (anti debugger, anti sandboxie dll injection), auth file exist check, tooltips, non sizable window, empty field check and auth file check, error display, hide/unhide console option, threaded user ban and session checking every 60 seconds**
