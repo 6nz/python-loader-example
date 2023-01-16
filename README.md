@@ -1,9 +1,9 @@
 # python-loader-example
 **Description:**
-Python [KeyAuth](https://keyauth.win/) loader with basic protections and auth system.
+Python [KeyAuth](https://keyauth.cc/) loader with basic protections and auth system.
 
 **WEBSITE:**
-https://keyauth.win/
+https://keyauth.cc/
 
 # Features:
 **Anti-VM, pc logging, user info display, register option, save user option, auto login, basic protections (anti debugger, anti sandboxie dll injection), auth file exist check, tooltips, non sizable window, empty field check and auth file check, error display, hide/unhide console option, threaded user ban and session checking every 60 seconds**
@@ -11,6 +11,23 @@ https://keyauth.win/
 # How to use:
 Check everything from line 40 to line 82, add a discord webhook at line 78 and dont forget to set up the keyauth API line 729.
 
+# Copyright License
+
+KeyAuth is licensed under **Elastic License 2.0**
+
+* You may not provide the software to third parties as a hosted or managed
+service, where the service provides users with access to any substantial set of
+the features or functionality of the software.
+
+* You may not move, change, disable, or circumvent the license key functionality
+in the software, and you may not remove or obscure any functionality in the
+software that is protected by the license key.
+
+* You may not alter, remove, or obscure any licensing, copyright, or other notices
+of the licensor in the software. Any use of the licensor’s trademarks is subject
+to applicable law.
+
+Thank you for your compliance, we work hard on the development of KeyAuth and do not appreciate our copyright being infringed.
 
 # How to edit and re compile the UI:
 
